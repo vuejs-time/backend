@@ -14,7 +14,7 @@ export class BlogService {
     ) { }
 
     async findAll(): Promise<Blog[]> {
-        const blogs = await this.blogRepository.find({}).catch(err => {
+        const blogs = await this.blogRepository.find({relations : ["comments"]}).catch(err => {
             throw new InternalServerErrorException("خطای سروری : سرور قادر به گرفتن لیست بلاگ ها نمیباشد")
         })
         return blogs

@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Comment } from "src/admin/comments/entity/comment.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('blogs')
 export class Blog {
@@ -18,6 +19,8 @@ export class Blog {
     image: string;
     @Column({ default: false, nullable: false })
     status: boolean;
+    @OneToMany(() => Comment, comment => comment.blog)
+    comments: Comment[];
     @CreateDateColumn({ type: "timestamp", name: 'created_at' })
     createdAt: Date;
     @UpdateDateColumn({ type: "timestamp", name: 'updated_at' })
