@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from "@nestjs/common";
-import { ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { ApiCreatedResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
 import { CourseService } from "./course.service";
+import { CreateCourseDTO } from "./dto/create-course.dto";
 
 @ApiTags("Courses")
 @Controller("/courses")
@@ -26,6 +27,16 @@ export class CourseController {
             status: 200,
             success: true,
             course
+        }
+    }
+    @ApiCreatedResponse()
+    @Post("/")
+    async createCourse(@Body() createCourseDto : CreateCourseDTO) {
+        await this.courseService.create(createCourseDto)
+        return {
+            status: 201,
+            success: true,
+            message : "ایجاد دوره با موفقیت انجام شد"
         }
     }
 }

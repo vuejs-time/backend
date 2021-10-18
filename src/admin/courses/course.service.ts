@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CourseRepository } from "./course.repository";
+import { CreateCourseDTO } from "./dto/create-course.dto";
 
 @Injectable()
 export class CourseService {
@@ -8,7 +9,7 @@ export class CourseService {
         @InjectRepository(CourseRepository) private courseRepository: CourseRepository
     ) { }
     async findAll() {
-        const courses = await this.courseRepository.find({});
+        const courses = await this.courseRepository.find({relations : ['chapters', "chapters.episodes"]});
         return courses
     }
     async findById(id: number) {
@@ -19,5 +20,12 @@ export class CourseService {
     async findOne(id: number) {
         const course = await this.findById(id)
         return course
+    }
+    async create(createCourseDto: CreateCourseDTO) {
+        const course = await this.courseRepository.insert(createCourseDto)
+        .catch(err => {
+            throw new InternalServerErrorException("ایجاد دوره انجام نشد لطفا دوباره سعی کنید")
+        })
+        return true
     }
 }
